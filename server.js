@@ -1,4 +1,5 @@
 require("dotenv").config();
+//Dependencies
 var express = require("express");
 var bodyParser = require("body-parser");
 var exphbs = require("express-handlebars");
@@ -13,7 +14,7 @@ var PORT = process.env.PORT || 3000;
 var db = require("./models");
 
 //passing passport for configuration file
-// require("./config/passport")(passport);
+require("./config/passport")(passport);
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -22,7 +23,7 @@ app.use(express.static("public"));
 
 app.use(
   session({
-    key: "users_id",
+    key: "user_sid",
     secret: "goN6DJJC6E287cC77kkdYuNuAyWnz7Q3iZj8",
     resave: false,
     saveUninitialized: false,
@@ -33,7 +34,7 @@ app.use(
 );
 
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session()); // persistent login sessions
 app.use(flash());
 
 // Handlebars
@@ -47,7 +48,10 @@ app.set("view engine", "handlebars");
 
 // Routes
 require("./routes/apiRoutes")(app, passport);
-require("./routes/htmlRoutes")(app, passport);
+require("./controllers/htmlRoutes")(app, passport);
+require("./controllers/createtasks-controller")(app, passport);
+require("./controllers/todo-controller")(app, passport);
+require("./controllers/user-controller")(app, passport);
 
 var syncOptions = { force: false };
 
