@@ -1,0 +1,62 @@
+<main class="no-padding no-pad-top taskmain">
+
+  <div class="container start-splash-container row">
+    <div class="row">
+        <div class="col s6 tasklist">To Do</div>
+        {{!--handlebars format to pull data from table--}}
+        <div class="col s6 tasklist">Completed!</div>
+        {{!--handlebars format to populate tasks created in the createtasks page?--}}
+      </div>
+    <div class="row"> 
+        {{#each task }} {{!--needs to pull data (list) from database--}}
+            <div class="col s6 taskCompleted">
+                {{this}}
+            </div>
+        {{/each}}
+
+        {{#each task}} {{!--burger---}}
+        {{#if this.completed}} {{!--devoured---}}
+          <div class='col s6 taskCompleted'>        
+            <div>
+              {{this.task_name}} {{!--burger_name---}}
+            </div>
+          </div>
+        {{/if}}
+      {{/each}}
+
+    </div>
+    </div>
+  </div>
+  
+  {{!--Possibly have code that when 6 tasks are selected, the prize section is highlighted and enables child
+  to choose from a prize. Javascript animation when prize selected?--}}
+
+  <div class="container start-splash-container row">
+    <div class="col s12 center-align">
+      <h5 class="createtasks red lighten-4">Complete 6 tasks and choose from these great prizes!</h5>
+        <div class="row">
+          <div class="col m4 s12 prizes">
+            Bowl of Ice Cream
+          </div>
+          <div class="col m4 s12 prizes">
+            One hour of TV or video games
+          </div>
+          <div class="col m4 s12 prizes">
+            Ride bike for an hour
+          </div>
+        </div>
+        <div class="row">
+          <div class="col m4 s12 prizes">
+            Go to the playground
+          </div>
+          <div class="col m4 s12 prizes">
+            Visit the Science Museum
+          </div>
+          <div class="col m4 s12 prizes">
+            Sit outside and play with sticks
+          </div>
+        </div>
+    </div>
+  </div>
+    
+</main>
