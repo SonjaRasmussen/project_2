@@ -39,7 +39,7 @@ module.exports = function(app){
     })
 
     app.get("/dashboard", function(req, res) { //need to create page
-      res.render("index", {});
+      res.render("dashboard", {});
     })
 
     app.get("/login", function(req, res) { //need to create page
