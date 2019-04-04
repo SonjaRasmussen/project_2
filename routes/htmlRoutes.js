@@ -7,7 +7,7 @@ module.exports = function(app){
                 id: req.session.passport.user,
                 isloggedin: req.isAuthenticated()
             };
-            res.render("home", user);
+            res.render("dashboard", user);
         }
         else{
             res.render("login");
@@ -34,8 +34,20 @@ module.exports = function(app){
         }
     })
 
-    app.get("/justin-test", function(req, res) {
+    app.get("/createtasks", function(req, res) {
       res.render("createtasks", {});
+    })
+
+    app.get("/dashboard", function(req, res) { //need to create page
+      res.render("index", {});
+    })
+
+    app.get("/login", function(req, res) { //need to create page
+      res.render("login", {});
+    })
+
+    app.get("/register", function(req, res) { //need to create page
+      res.render("register", {});
     })
 };
 

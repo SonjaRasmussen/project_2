@@ -4412,7 +4412,7 @@ nav .nav-wrapper {
 nav .sidenav-trigger {
   float: left;
   position: relative;
-  z-index: 1;
+  z-index: 100;
   height: 56px;
   margin: 0 18px;
 }
