@@ -1,37 +1,84 @@
 var db = require("../models");
 
-var passport = require("passport");
-
 module.exports = function(app) {
-  app.get("/home", function (req, res) {
+  app.get("/", function(req, res) {
     if (req.isAuthenticated()) {
-      db.ToDo.findAll({}).then(function (dbToDo) {
-        console.log("dbToDo", dbToDo);
+      db.User.findByPk(req.user.uuid).then(function(dbUser) {
+        dbUser.getToDos().then(function(dbToDo) {
+          console.log("dbToDo", dbToDo);
 
-        var hbsObj = {
-          ToDo: [],
-          id: req.session.passport.user,
-          isloggedin: req.isAuthenticated()
+          var hbsObj = {
+            todos: [],
+            completed: [],
+            user: req.user,
+            id: req.session.passport.user,
+            isloggedin: req.isAuthenticated()
+          };
+          dbToDo.forEach(function(task) {
+            if (task.completed) {
+              hbsObj.completed.push(task.dataValues);
+            } else {
+              hbsObj.todos.push(task.dataValues);
+            }
+          });
 
-        };
-        dbToDo.forEach(function(task){
-          hbsObj.ToDo.push(task.dataValues);
+          res.render("home", hbsObj);
         });
-
-        res.render("home", hbsObj);
       });
     } else {
-      res.redirect("/");
+      res.redirect("/login");
     }
   });
-
+  //mark a task complete
+  app.post("/task-complete/:id", function(req, res) {
+    if (req.isAuthenticated()) {
+      db.ToDo.findByPk(req.params.id)
+        .then(function(dbTodo) {
+          dbTodo.completed = true;
+          dbTodo.save();
+        })
+        .then(function() {
+          res.redirect("/");
+        });
+    }
+  });
+  //mark a task complete
+  app.post("/task-undo/:id", function(req, res) {
+    if (req.isAuthenticated()) {
+      db.ToDo.findByPk(req.params.id)
+        .then(function(dbTodo) {
+          dbTodo.completed = false;
+          dbTodo.save();
+        })
+        .then(function() {
+          res.redirect("/");
+        });
+    }
+  });
+  //Add a task
   app.post("/task", function(req, res) {
     if (req.isAuthenticated()) {
       console.log("Creating todo");
       db.ToDo.create({
         task: req.body.task_name,
         completed: false,
-        owner: req.user
+        ownerUuid: req.user.uuid
+      }).then(function(dbTodo) {
+        res.redirect("/");
+      });
+    } else {
+      res.redirect("/login");
+    }
+  });
+
+  //Delete a Task
+  app.post("/task-delete/:id", function(req, res) {
+    if (req.isAuthenticated()) {
+      console.log("Deleting a task");
+      db.ToDo.destroy({
+        where: {
+          id: req.params.id
+        }
       }).then(function(dbTodo) {
         res.redirect("/");
       });
@@ -40,5 +87,3 @@ module.exports = function(app) {
     }
   });
 };
-
-//add logic to sort completes vs dbToDo
